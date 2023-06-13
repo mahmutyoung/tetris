@@ -1,0 +1,13 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.canvas-container {
+  display: flex;
+}
+#canvas {
+  width: 400;
+  height: 500px;
+  margin: 200px auto;
+  background-color: black;
+}
