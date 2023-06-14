@@ -1,13 +1,15 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  border:2px solid green;
 }
 .canvas-container {
   display: flex;
 }
 #canvas {
-  width: 400;
-  height: 500px;
+ 
   margin: 200px auto;
   background-color: black;
+  box-shadow: 8px 8px 1px rgba(0, 0, 0, 0.5);
 }
