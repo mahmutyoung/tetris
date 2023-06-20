@@ -1,4 +1,4 @@
-import { Tetromino } from "/Tetromino.js";
+import { Tetromino } from "./Tetromino.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -69,7 +69,7 @@ function gameLoop() {
   });
   drawGrid();
   console.log(board);
-  
+
   console.log(
     "🚀 ~ file: main.js:88 ~ gameLoop ~ myTetromino:",
     myTetromino.vy
@@ -80,7 +80,7 @@ function gameLoop() {
       myTetromino.vy
     );
     board.push(myTetromino);
-    
+
     console.log("🚀 ~ file: main.js:88 ~ gameLoop ~ board:", board);
     let newTetromino = new Tetromino(canvas, "red", 0, 1);
     myTetromino = newTetromino;

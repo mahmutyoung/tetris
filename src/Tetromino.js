@@ -1,4 +1,4 @@
-import { board } from "./src/main.js";
+import { board } from "./main.js";
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width = 400;
