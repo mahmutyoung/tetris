@@ -1,21 +1,22 @@
-import { Tetromino } from "/Tetromino.js";
+import { Tetromino } from "./Tetromino.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-canvas.width = 400;
-canvas.height = 600;
-const unit = canvas.width / 20;
+const scale = 20;
+canvas.width = 20 * scale;
+canvas.height = 30 * scale;
+
 export const board = [];
 
 function drawGrid() {
   ctx.strokeStyle = "white";
   ctx.lineWidth = 1;
   ctx.beginPath();
-  for (let i = 0; i < canvas.width; i += unit) {
+  for (let i = 0; i < canvas.width; i += scale) {
     ctx.moveTo(i, 0);
     ctx.lineTo(i, canvas.height);
   }
-  for (let i = 0; i < canvas.height; i += unit) {
+  for (let i = 0; i < canvas.height; i += scale) {
     ctx.moveTo(0, i);
     ctx.lineTo(canvas.width, i);
   }
@@ -59,7 +60,7 @@ document.addEventListener("keydown", (event) => {
       break;
   }
 });
-let myTetromino = new Tetromino(canvas, "red", 0, 1);
+let myTetromino = new Tetromino(canvas, "red", 1, 20, 30, 20);
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   myTetromino.update();
@@ -69,21 +70,13 @@ function gameLoop() {
   });
   drawGrid();
   console.log(board);
-  
-  console.log(
-    "🚀 ~ file: main.js:88 ~ gameLoop ~ myTetromino:",
-    myTetromino.vy
-  );
+
   if (myTetromino.vy === 0) {
-    console.log(
-      "🚀 ~ file: main.js:88 ~ gameLoop ~ myTetromino:",
-      myTetromino.vy
-    );
     board.push(myTetromino);
-    
-    console.log("🚀 ~ file: main.js:88 ~ gameLoop ~ board:", board);
-    let newTetromino = new Tetromino(canvas, "red", 0, 1);
+
+    let newTetromino = new Tetromino(canvas, "red", 1, 20, 30, 20);
     myTetromino = newTetromino;
+    console.log(myTetromino);
     gameLoop();
   } else {
     setTimeout(gameLoop, 1000);
