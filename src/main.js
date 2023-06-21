@@ -22,13 +22,6 @@ function drawGrid() {
   ctx.stroke();
 }
 
-/*
-const myTetromino = new Tetromino(canvas,  "red", 0, 1);
-const myTetromino1 = new Tetromino(canvas, "red", 0, 1);
-console.log(myTetromino,myTetromino1);
-myTetromino.draw();
-myTetromino1.draw();
-*/
 document.addEventListener("keydown", (event) => {
   switch (event.code) {
     case "ArrowLeft":
