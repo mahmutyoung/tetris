@@ -1,4 +1,4 @@
-import { Tetromino } from "../Tetromino.js";
+import { Tetromino } from "./Tetromino.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -30,47 +30,70 @@ document.addEventListener("keydown", (event) => {
       myTetromino.goLeft();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       myTetromino.draw();
+      board.forEach((element) => {
+        element.draw();
+      });
       break;
     case "ArrowRight":
       event.preventDefault();
       myTetromino.goRight();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       myTetromino.draw();
+      board.forEach((element) => {
+        element.draw();
+      });
       break;
     case "ArrowUp":
       event.preventDefault();
       myTetromino.rotate();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       myTetromino.draw();
+      board.forEach((element) => {
+        element.draw();
+      });
       break;
     case "ArrowDown":
       event.preventDefault();
       myTetromino.goDown();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       myTetromino.draw();
+      board.forEach((element) => {
+        element.draw();
+      });
       break;
     default:
       break;
   }
 });
-let myTetromino = new Tetromino(canvas, "red", 1, 20, 30, 20);
+let myTetromino = new Tetromino(canvas, "rgb(255, 190, 90,0.7)", 1, 20, 30, 20);
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  myTetromino.update();
   myTetromino.draw();
+  myTetromino.update();
+  Tetromino.collapseRows(board);
   board.forEach((element) => {
     element.draw();
   });
-  drawGrid();
+
+  //drawGrid();
   console.log(board);
 
   if (myTetromino.vy === 0) {
-    board.push(myTetromino);
-
-    let newTetromino = new Tetromino(canvas, "red", 1, 20, 30, 20);
-    myTetromino = newTetromino;
     console.log(myTetromino);
-    gameLoop();
+    const minY = Math.min(...myTetromino.shapePath.map((element) => element.y));
+    board.push(myTetromino);
+    Tetromino.collapseRows(board);
+    board.forEach((element) => {
+      element.draw();
+    });
+
+    if (minY !== 0) {
+      let newTetromino = new Tetromino(canvas, "red", 1, 20, 30, 20);
+      myTetromino = newTetromino;
+
+      console.log(myTetromino);
+      gameLoop();
+    }
   } else {
     setTimeout(gameLoop, 1000);
   }

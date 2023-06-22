@@ -30,12 +30,48 @@ export class Tetromino {
     }
     return false;
   }
-
+  static collapseRows(board) {
+    let newBoard;
+    for (let i = 29; i >= 0; i--) {
+      let counter = 0;
+      board.forEach((element) => {
+        element.shapePath.forEach((item) => {
+          if (item.y === i) {
+            counter++;
+          }
+        });
+      });
+      console.log({ counter });
+      if (counter === 5) {
+        newBoard = board.filter((element) => {
+          const newElement = element.shapePath.filter((item) => {
+            return item.y !== i;
+          });
+          console.log(newElement);
+          return newElement;
+        });
+      }
+    }
+    console.log(newBoard);
+    board = newBoard;
+    return board;
+  }
   draw() {
-    this.ctx.fillStyle = this.color;
+    
+    this.ctx.fillStyle = "rgba(255, 70, 83)";
+    
     console.log(this.shapePath);
     this.shapePath.forEach((element) => {
       this.ctx.fillRect(
+        element.x * this.scale,
+        element.y * this.scale,
+        this.scale,
+        this.scale
+      );
+      
+      this.ctx.strokeStyle = "white";
+      this.ctx.lineWidth =2;
+      this.ctx.strokeRect(
         element.x * this.scale,
         element.y * this.scale,
         this.scale,
