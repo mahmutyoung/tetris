@@ -17,50 +17,20 @@ export class Tetromino {
 
   isColliding(board) {
     for (let i = 0; i < board.length; i++) {
-      for (let j = 0; j < board[i].shapePath.length; j++) {
-        for (let k = 0; k < this.shapePath.length; k++) {
-          if (
-            this.shapePath[k].x === board[i].shapePath[j].x &&
-            this.shapePath[k].y === board[i].shapePath[j].y
-          ) {
-            return true;
-          }
-        }
+      if (
+        this.shapePath.some(
+          (element) => element.x === board[i].x && element.y === board[i].y
+        )
+      ) {
+        return true;
       }
     }
     return false;
   }
-  static collapseRows(board) {
-    let newBoard;
-    for (let i = 29; i >= 0; i--) {
-      let counter = 0;
-      board.forEach((element) => {
-        element.shapePath.forEach((item) => {
-          if (item.y === i) {
-            counter++;
-          }
-        });
-      });
-      console.log({ counter });
-      if (counter === 5) {
-        newBoard = board.filter((element) => {
-          const newElement = element.shapePath.filter((item) => {
-            return item.y !== i;
-          });
-          console.log(newElement);
-          return newElement;
-        });
-      }
-    }
-    console.log(newBoard);
-    board = newBoard;
-    return board;
-  }
   draw() {
-    
     this.ctx.fillStyle = "rgba(255, 70, 83)";
-    
-    console.log(this.shapePath);
+
+    //console.log(this.shapePath);
     this.shapePath.forEach((element) => {
       this.ctx.fillRect(
         element.x * this.scale,
@@ -68,9 +38,9 @@ export class Tetromino {
         this.scale,
         this.scale
       );
-      
+
       this.ctx.strokeStyle = "white";
-      this.ctx.lineWidth =2;
+      this.ctx.lineWidth = 2;
       this.ctx.strokeRect(
         element.x * this.scale,
         element.y * this.scale,
@@ -81,7 +51,7 @@ export class Tetromino {
   }
 
   update() {
-    console.log(this.shapePath);
+    //console.log(this.shapePath);
     this.shapePath.maxY = Math.max(
       ...this.shapePath.map((element) => element.y)
     );
@@ -89,7 +59,7 @@ export class Tetromino {
       this.shapePath.forEach((element) => {
         element.y += this.vy;
       });
-      console.log(this.isColliding(board));
+      //console.log(this.isColliding(board));
       if (this.isColliding(board)) {
         this.shapePath.forEach((element) => {
           element.y -= this.vy;

@@ -6,8 +6,7 @@ const scale = 20;
 canvas.width = 20 * scale;
 canvas.height = 30 * scale;
 
-export const board = [];
-
+export let board = [];
 function drawGrid() {
   ctx.strokeStyle = "white";
   ctx.lineWidth = 1;
@@ -31,7 +30,7 @@ document.addEventListener("keydown", (event) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       myTetromino.draw();
       board.forEach((element) => {
-        element.draw();
+        drawSquare(element);
       });
       break;
     case "ArrowRight":
@@ -40,7 +39,7 @@ document.addEventListener("keydown", (event) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       myTetromino.draw();
       board.forEach((element) => {
-        element.draw();
+        drawSquare(element);
       });
       break;
     case "ArrowUp":
@@ -49,7 +48,7 @@ document.addEventListener("keydown", (event) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       myTetromino.draw();
       board.forEach((element) => {
-        element.draw();
+        drawSquare(element);
       });
       break;
     case "ArrowDown":
@@ -58,7 +57,7 @@ document.addEventListener("keydown", (event) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       myTetromino.draw();
       board.forEach((element) => {
-        element.draw();
+        drawSquare(element);
       });
       break;
     default:
@@ -70,9 +69,9 @@ function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   myTetromino.draw();
   myTetromino.update();
-  Tetromino.collapseRows(board);
+  console.log(myTetromino);
   board.forEach((element) => {
-    element.draw();
+    drawSquare(element);
   });
 
   //drawGrid();
@@ -81,10 +80,19 @@ function gameLoop() {
   if (myTetromino.vy === 0) {
     console.log(myTetromino);
     const minY = Math.min(...myTetromino.shapePath.map((element) => element.y));
-    board.push(myTetromino);
-    Tetromino.collapseRows(board);
+
+    myTetromino.shapePath.forEach((element) => {
+      board.push(element);
+    });
+    console.log(board);
+    const filteredArr = collapseRows(board);
+
+    console.log(filteredArr);
+    if (filteredArr !== undefined) {
+      board = filteredArr;
+    }
     board.forEach((element) => {
-      element.draw();
+      drawSquare(element);
     });
 
     if (minY !== 0) {
@@ -100,3 +108,31 @@ function gameLoop() {
 }
 
 gameLoop();
+
+function collapseRows(arr) {
+  let filteredArr;
+  for (let i = 29; i >= 0; i--) {
+    let counter = 0;
+    arr.forEach((element) => {
+      if (element.y === i) {
+        counter++;
+        console.log({ i, counter });
+      }
+    });
+
+    if (counter === 20) {
+      filteredArr = arr.filter((element) => {
+        return element.y !== i;
+      });
+    }
+  }
+  return filteredArr;
+}
+
+function drawSquare(point) {
+  ctx.fillStyle = "rgba(255, 70, 83)";
+  ctx.fillRect(point.x * scale, point.y * scale, scale, scale);
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(point.x * scale, point.y * scale, scale, scale);
+}
