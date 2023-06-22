@@ -96,7 +96,9 @@ function gameLoop() {
     });
 
     if (minY !== 0) {
-      let newTetromino = new Tetromino(canvas, "red", 1, 20, 30, 20);
+      const randomColorArray = getRandomColor();
+      const randomColor = randomColorArray[Math.round(Math.random() * 6)];
+      let newTetromino = new Tetromino(canvas, randomColor, 1, 20, 30, 20);
       myTetromino = newTetromino;
 
       console.log(myTetromino);
@@ -135,4 +137,22 @@ function drawSquare(point) {
   ctx.strokeStyle = "white";
   ctx.lineWidth = 2;
   ctx.strokeRect(point.x * scale, point.y * scale, scale, scale);
+}
+
+function getRandomColor() {
+  let color;
+  const getColor = () => {
+    const red = Math.floor(Math.random() * 256);
+    const green = Math.floor(Math.random() * 256);
+    const blue = Math.floor(Math.random() * 256);
+    color = `rgb(${red}, ${green}, ${blue})`;
+    return color;
+  };
+
+  const colors = [];
+
+  for (let i = 0; i < 6; i++) {
+    colors.push(getColor());
+  }
+  return colors;
 }

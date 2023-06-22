@@ -28,7 +28,7 @@ export class Tetromino {
     return false;
   }
   draw() {
-    this.ctx.fillStyle = "rgba(255, 70, 83)";
+    this.ctx.fillStyle = this.color;
 
     //console.log(this.shapePath);
     this.shapePath.forEach((element) => {
