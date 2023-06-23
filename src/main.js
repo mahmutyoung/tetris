@@ -113,7 +113,7 @@ gameLoop();
 
 function collapseRows(arr) {
   const rowsToDelete = [];
-  let newArr;
+
   for (let i = 29; i >= 0; i--) {
     let counter = 0;
     arr.forEach((element) => {
