@@ -252,28 +252,3 @@ function makeTetromino(type) {
   }
   return shapePath;
 }
-function checkIntersection(path, pathArray) {
-  // Loop through all the points on path1 and check if they fall inside path2
-  for (let i = 0; i < path.length; i++) {
-    const point = path[i];
-    for (let j = 0; j < pathArray.length; j++) {
-      const path2 = pathArray[j];
-      if (path2.ctx.isPointInPath(path2, point.x, point.y, "nonzero")) {
-        return true; // Paths intersect
-      }
-    }
-  }
-
-  // Loop through all the points on path2 and check if they fall inside path1
-  for (let i = 0; i < pathArray.length; i++) {
-    for (let j = 0; j < pathArray[i].shapePath.length; j++) {
-      const point = pathArray[i].ctx;
-      if (ctx.isPointInPath(path, point.x, point.y, "nonzero")) {
-        return true; // Paths intersect
-      }
-    }
-
-    // No intersections found
-  }
-  return false;
-}
