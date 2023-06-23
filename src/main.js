@@ -1,26 +1,18 @@
 import { Tetromino } from "./Tetromino.js";
 
+export let board = [];
+
+//initialize game
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const scale = 20;
-canvas.width = 20 * scale;
-canvas.height = 30 * scale;
+const width = 20;
+const height = 30;
+const color = getRandomColor();
+let vy = 1;
+let myTetromino = new Tetromino(canvas, color, vy, width, height, scale);
 
-export let board = [];
-function drawGrid() {
-  ctx.strokeStyle = "white";
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  for (let i = 0; i < canvas.width; i += scale) {
-    ctx.moveTo(i, 0);
-    ctx.lineTo(i, canvas.height);
-  }
-  for (let i = 0; i < canvas.height; i += scale) {
-    ctx.moveTo(0, i);
-    ctx.lineTo(canvas.width, i);
-  }
-  ctx.stroke();
-}
+gameLoop();
 
 document.addEventListener("keydown", (event) => {
   switch (event.code) {
@@ -29,79 +21,52 @@ document.addEventListener("keydown", (event) => {
       myTetromino.goLeft();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       myTetromino.draw();
-      board.forEach((element) => {
-        drawSquare(element);
-      });
+      board.forEach((element) => drawSquare(element));
       break;
     case "ArrowRight":
       event.preventDefault();
       myTetromino.goRight();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       myTetromino.draw();
-      board.forEach((element) => {
-        drawSquare(element);
-      });
+      board.forEach((element) => drawSquare(element));
       break;
     case "ArrowUp":
       event.preventDefault();
       myTetromino.rotate();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       myTetromino.draw();
-      board.forEach((element) => {
-        drawSquare(element);
-      });
+      board.forEach((element) => drawSquare(element));
       break;
     case "ArrowDown":
       event.preventDefault();
       myTetromino.goDown();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       myTetromino.draw();
-      board.forEach((element) => {
-        drawSquare(element);
-      });
+      board.forEach((element) => drawSquare(element));
       break;
     default:
       break;
   }
 });
-let myTetromino = new Tetromino(canvas, "rgb(255, 190, 90,0.7)", 1, 20, 30, 20);
+
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   myTetromino.draw();
   myTetromino.update();
-  console.log(myTetromino);
-  board.forEach((element) => {
-    drawSquare(element);
-  });
-
-  //drawGrid();
-  console.log(board);
+  board.forEach((element) => drawSquare(element));
 
   if (myTetromino.vy === 0) {
-    console.log(myTetromino);
     const minY = Math.min(...myTetromino.shapePath.map((element) => element.y));
-
-    myTetromino.shapePath.forEach((element) => {
-      board.push(element);
-    });
-    console.log(board);
+    myTetromino.shapePath.forEach((element) => board.push(element));
     const filteredArr = collapseRows(board);
-
-    console.log(filteredArr);
     if (filteredArr !== undefined) {
       board = filteredArr;
     }
-    board.forEach((element) => {
-      drawSquare(element);
-    });
-
+    board.forEach((element) => drawSquare(element));
     if (minY !== 0) {
-      const randomColorArray = getRandomColor();
-      const randomColor = randomColorArray[Math.round(Math.random() * 6)];
-      let newTetromino = new Tetromino(canvas, randomColor, 1, 20, 30, 20);
+      const color = getRandom6Colors()[Math.round(Math.random() * 6)];
+      let newTetromino = new Tetromino(canvas, color, vy, width, height, scale);
       myTetromino = newTetromino;
-
-      console.log(myTetromino);
       gameLoop();
     }
   } else {
@@ -109,33 +74,26 @@ function gameLoop() {
   }
 }
 
-gameLoop();
-
+/**
+ * Collapse rows in an array if a row contains 20 elements.
+ *
+ * @param {Array} arr - The array to collapse rows from.
+ * @return {Array} The modified array with collapsed rows.
+ */
 function collapseRows(arr) {
   const rowsToDelete = [];
-
   for (let i = 29; i >= 0; i--) {
     let counter = 0;
-    arr.forEach((element) => {
-      if (element.y === i) {
-        counter++;
-      }
-    });
-
-    if (counter === 20) {
+    arr.forEach((element) => element.y === i && counter++);
+    if (counter >= 4) {
       rowsToDelete.push(i);
     }
   }
   if (rowsToDelete.length > 0) {
     for (let j = 0; j < rowsToDelete.length; j++) {
-      arr = arr.filter((element) => {
-        return element.y !== rowsToDelete[j];
-      });
-
-      console.log({ rowsToDelete, arr });
+      arr = arr.filter((element) => element.y !== rowsToDelete[j]);
     }
   }
-
   return arr;
 }
 
@@ -147,20 +105,22 @@ function drawSquare(point) {
   ctx.strokeRect(point.x * scale, point.y * scale, scale, scale);
 }
 
-function getRandomColor() {
-  let color;
-  const getColor = () => {
-    const red = Math.floor(Math.random() * 256);
-    const green = Math.floor(Math.random() * 256);
-    const blue = Math.floor(Math.random() * 256);
-    color = `rgb(${red}, ${green}, ${blue})`;
-    return color;
-  };
-
+/**
+ * Generates an array of 6 random RGB colors.
+ *
+ * @return {Array} An array of 6 random RGB colors in string format.
+ */
+function getRandom6Colors() {
   const colors = [];
-
   for (let i = 0; i < 6; i++) {
-    colors.push(getColor());
+    colors.push(getRandomColor());
   }
   return colors;
+}
+function getRandomColor() {
+  const red = Math.floor(Math.random() * 256);
+  const green = Math.floor(Math.random() * 256);
+  const blue = Math.floor(Math.random() * 256);
+  let color = `rgb(${red}, ${green}, ${blue})`;
+  return color;
 }

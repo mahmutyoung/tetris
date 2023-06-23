@@ -5,8 +5,8 @@ const typeArray = ["I", "J", "L", "O", "S", "T", "Z"];
 export class Tetromino {
   constructor(canvas, color, vy, width, height, scale) {
     this.canvas = canvas;
-    this.canvas.width = width * scale;
-    this.canvas.height = height * scale;
+    this.canvas.width = width*scale;
+    this.canvas.height = height*scale;
     this.ctx = canvas.getContext("2d");
     this.type = typeArray[Math.round(Math.random() * (typeArray.length - 1))];
     this.shapePath = makeTetromino(this.type);
