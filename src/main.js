@@ -122,7 +122,7 @@ function collapseRows(arr) {
       }
     });
 
-    if (counter === 20) {
+    while (counter === 20) {
       filteredArr = arr.filter((element) => {
         return element.y !== i;
       });
