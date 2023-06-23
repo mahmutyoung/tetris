@@ -112,23 +112,31 @@ function gameLoop() {
 gameLoop();
 
 function collapseRows(arr) {
-  let filteredArr;
+  const rowsToDelete = [];
+  let newArr;
   for (let i = 29; i >= 0; i--) {
     let counter = 0;
     arr.forEach((element) => {
       if (element.y === i) {
         counter++;
-        console.log({ i, counter });
       }
     });
 
-    while (counter === 20) {
-      filteredArr = arr.filter((element) => {
-        return element.y !== i;
-      });
+    if (counter >= 4) {
+      rowsToDelete.push(i);
     }
   }
-  return filteredArr;
+  if (rowsToDelete.length > 0) {
+    for (let j = 0; j < rowsToDelete.length; j++) {
+      arr = arr.filter((element) => {
+        return element.y !== rowsToDelete[j];
+      });
+
+      console.log({ rowsToDelete, arr });
+    }
+  }
+
+  return arr;
 }
 
 function drawSquare(point) {
