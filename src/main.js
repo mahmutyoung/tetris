@@ -122,7 +122,7 @@ function collapseRows(arr) {
       }
     });
 
-    if (counter >= 4) {
+    if (counter === 20) {
       rowsToDelete.push(i);
     }
   }
