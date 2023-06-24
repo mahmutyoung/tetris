@@ -5,8 +5,8 @@ const typeArray = ["I", "J", "L", "O", "S", "T", "Z"];
 export class Tetromino {
   constructor(canvas, color, vy, width, height, scale) {
     this.canvas = canvas;
-    this.canvas.width = width*scale;
-    this.canvas.height = height*scale;
+    this.canvas.width = width * scale;
+    this.canvas.height = height * scale;
     this.ctx = canvas.getContext("2d");
     this.type = typeArray[Math.round(Math.random() * (typeArray.length - 1))];
     this.shapePath = makeTetromino(this.type);
@@ -39,8 +39,8 @@ export class Tetromino {
         this.scale
       );
 
-      this.ctx.strokeStyle = "white";
-      this.ctx.lineWidth = 2;
+      this.ctx.strokeStyle = "rgb(250, 250, 250)";
+      this.ctx.lineWidth = 3;
       this.ctx.strokeRect(
         element.x * this.scale,
         element.y * this.scale,
@@ -185,64 +185,64 @@ function makeTetromino(type) {
   switch (type) {
     case "I":
       shapePath = [
-        { x: 11, y: 0 },
-        { x: 11, y: 1 },
-        { x: 11, y: 2 },
-        { x: 11, y: 3 },
+        { x: 6, y: 0 },
+        { x: 6, y: 1 },
+        { x: 6, y: 2 },
+        { x: 6, y: 3 },
       ];
 
       break;
     case "J":
       shapePath = [
-        { x: 11, y: 0 },
-        { x: 11, y: 1 },
-        { x: 11, y: 2 },
-        { x: 10, y: 2 },
+        { x: 6, y: 0 },
+        { x: 6, y: 1 },
+        { x: 6, y: 2 },
+        { x: 5, y: 2 },
       ];
 
       break;
     case "L":
       shapePath = [
-        { x: 10, y: 0 },
-        { x: 10, y: 1 },
-        { x: 10, y: 2 },
-        { x: 11, y: 2 },
+        { x: 5, y: 0 },
+        { x: 5, y: 1 },
+        { x: 5, y: 2 },
+        { x: 6, y: 2 },
       ];
 
       break;
     case "O":
       shapePath = [
-        { x: 10, y: 0 },
-        { x: 11, y: 0 },
-        { x: 10, y: 1 },
-        { x: 11, y: 1 },
+        { x: 5, y: 0 },
+        { x: 6, y: 0 },
+        { x: 5, y: 1 },
+        { x: 6, y: 1 },
       ];
 
       break;
     case "S":
       shapePath = [
-        { x: 10, y: 0 },
-        { x: 11, y: 0 },
-        { x: 10, y: 1 },
-        { x: 9, y: 1 },
+        { x: 5, y: 0 },
+        { x: 6, y: 0 },
+        { x: 5, y: 1 },
+        { x: 4, y: 1 },
       ];
 
       break;
     case "T":
       shapePath = [
-        { x: 10, y: 0 },
-        { x: 11, y: 0 },
-        { x: 12, y: 0 },
-        { x: 11, y: 1 },
+        { x: 5, y: 0 },
+        { x: 6, y: 0 },
+        { x: 7, y: 0 },
+        { x: 6, y: 1 },
       ];
 
       break;
     case "Z":
       shapePath = [
-        { x: 10, y: 0 },
-        { x: 11, y: 0 },
-        { x: 10, y: 1 },
-        { x: 11, y: 1 },
+        { x: 5, y: 0 },
+        { x: 6, y: 0 },
+        { x: 5, y: 1 },
+        { x: 6, y: 1 },
       ];
 
       break;

@@ -3,11 +3,11 @@ import { Tetromino } from "./Tetromino.js";
 export let board = [];
 
 //initialize game
-const canvas = document.getElementById("canvas");
+const canvas = document.getElementById("canvas-screen");
 const ctx = canvas.getContext("2d");
-const scale = 20;
-const width = 20;
-const height = 30;
+const scale = 40;
+const width = 12;
+const height = 18;
 const color = getRandomColor();
 let vy = 1;
 let myTetromino = new Tetromino(canvas, color, vy, width, height, scale);
@@ -49,20 +49,29 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+/**
+ * Executes the game loop which updates the tetromino's position and board state,
+ * and then clears the canvas and redraws the board and tetromino.
+ */
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   myTetromino.draw();
   myTetromino.update();
   board.forEach((element) => drawSquare(element));
-
+  //
+  //add the last tetromino to the board as simpler 4 squares(points)
   if (myTetromino.vy === 0) {
-    const minY = Math.min(...myTetromino.shapePath.map((element) => element.y));
     myTetromino.shapePath.forEach((element) => board.push(element));
+    //check whether the board is collapsable
     const filteredArr = collapseRows(board);
     if (filteredArr !== undefined) {
       board = filteredArr;
     }
+    //draw the board
     board.forEach((element) => drawSquare(element));
+
+    //check the game over condition and define the next game state
+    const minY = Math.min(...myTetromino.shapePath.map((element) => element.y));
     if (minY !== 0) {
       const color = getRandom6Colors()[Math.round(Math.random() * 6)];
       let newTetromino = new Tetromino(canvas, color, vy, width, height, scale);
@@ -82,10 +91,10 @@ function gameLoop() {
  */
 function collapseRows(arr) {
   const rowsToDelete = [];
-  for (let i = 29; i >= 0; i--) {
+  for (let i = 17; i >= 0; i--) {
     let counter = 0;
     arr.forEach((element) => element.y === i && counter++);
-    if (counter >= 4) {
+    if (counter === 12) {
       rowsToDelete.push(i);
     }
   }
@@ -93,6 +102,12 @@ function collapseRows(arr) {
     for (let j = 0; j < rowsToDelete.length; j++) {
       arr = arr.filter((element) => element.y !== rowsToDelete[j]);
     }
+    arr = arr.map((element) => {
+      if (element.y < rowsToDelete[rowsToDelete.length - 1]) {
+        element.y += rowsToDelete.length;
+      }
+      return element;
+    });
   }
   return arr;
 }
@@ -100,8 +115,8 @@ function collapseRows(arr) {
 function drawSquare(point) {
   ctx.fillStyle = "rgba(255, 70, 83)";
   ctx.fillRect(point.x * scale, point.y * scale, scale, scale);
-  ctx.strokeStyle = "white";
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = "rgb(255, 255, 255)";
+  ctx.lineWidth = 3;
   ctx.strokeRect(point.x * scale, point.y * scale, scale, scale);
 }
 
