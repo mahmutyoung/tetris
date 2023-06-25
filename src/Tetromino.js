@@ -19,7 +19,8 @@ export class Tetromino {
     for (let i = 0; i < board.length; i++) {
       if (
         this.shapePath.some(
-          (element) => element.x === board[i].x && element.y === board[i].y
+          (element) =>
+            element.x === board[i].point.x && element.y === board[i].point.y
         )
       ) {
         return true;
@@ -51,8 +52,6 @@ export class Tetromino {
   }
 
   update() {
-    //console.log(this.shapePath);
-    this.draw();
     this.shapePath.maxY = Math.max(
       ...this.shapePath.map((element) => element.y)
     );
