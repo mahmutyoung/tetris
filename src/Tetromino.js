@@ -40,7 +40,7 @@ export class Tetromino {
       );
 
       this.ctx.strokeStyle = "rgb(250, 250, 250)";
-      this.ctx.lineWidth = 3;
+      this.ctx.lineWidth = 4;
       this.ctx.strokeRect(
         element.x * this.scale,
         element.y * this.scale,
@@ -52,6 +52,7 @@ export class Tetromino {
 
   update() {
     //console.log(this.shapePath);
+    this.draw();
     this.shapePath.maxY = Math.max(
       ...this.shapePath.map((element) => element.y)
     );
@@ -111,7 +112,7 @@ export class Tetromino {
     this.shapePath.maxY = Math.max(
       ...this.shapePath.map((element) => element.y)
     );
-    const tempShapePath = this.shapePath;
+
     const newPath = this.shapePath.map((element) => {
       if (this.shapePath.maxY > this.canvas.height / this.scale - 2) {
         return element;
@@ -241,8 +242,8 @@ function makeTetromino(type) {
       shapePath = [
         { x: 5, y: 0 },
         { x: 6, y: 0 },
-        { x: 5, y: 1 },
         { x: 6, y: 1 },
+        { x: 7, y: 1 },
       ];
 
       break;

@@ -1,100 +1,162 @@
 import { Tetromino } from "./Tetromino.js";
 
 export let board = [];
-
+let score = 0;
 //initialize game
+
 const canvas = document.getElementById("canvas-screen");
 const ctx = canvas.getContext("2d");
 const scale = 40;
 const width = 12;
 const height = 18;
-const color = getRandomColor();
 let vy = 1;
-let myTetromino = new Tetromino(canvas, color, vy, width, height, scale);
+const colorZero = getRandom6Colors()[Math.round(Math.random() * 6)];
+let myTetromino = new Tetromino(canvas, colorZero, vy, width, height, scale);
+let newTetromino, nextTetromino;
 
 gameLoop();
 
+console.log(score);
+
+function setupDisplay(Tetromino, score) {
+  const canvasDisp = document.getElementById("canvas-displayer");
+  canvasDisp.width = 200;
+  canvasDisp.height = 600;
+  const ctxDisp = canvasDisp.getContext("2d");
+  ctxDisp.fillStyle = "White";
+  ctxDisp.font = "40px Monospace";
+  ctxDisp.fillText("NEXT", 10, 40);
+
+  ctxDisp.fillText("SCORE", 10, 320);
+
+  ctxDisp.fillRect(0, 60, canvasDisp.width, canvasDisp.height / 3);
+  ctxDisp.fillRect(0, 340, canvasDisp.width, canvasDisp.height / 3);
+  ctxDisp.fillStyle = "black";
+  ctxDisp.fillText(`${Tetromino.type}`, 50, 200);
+  ctxDisp.fillText(`${score}`, 20, 460);
+
+  const newShape = Tetromino.shapePath.map((element) => {
+    return {
+      x: element.x,
+      y: element.y,
+    };
+  });
+  ctxDisp.fillStyle = "red";
+  newShape.forEach((element) => {
+    ctxDisp.fillRect(element.x * 50, element.y * 40, 50, 40);
+  });
+  /*
+  ctxDisp.fillRect(10, 75, 30, 25);
+  ctxDisp.fillRect(10, 100, 30, 25);
+  ctxDisp.fillRect(10, 125, 30, 25);
+  ctxDisp.fillRect(34, 125, 30, 25);
+  ctxDisp.strokeStyle = "black";
+  ctxDisp.lineWidth = 1;
+  newShape.forEach((element) => {
+    ctxDisp.strokeRect(element.x + 60, element.y + 80, 50, 30);
+  });
+  */
+}
+
 document.addEventListener("keydown", (event) => {
-  switch (event.code) {
-    case "ArrowLeft":
-      event.preventDefault();
-      myTetromino.goLeft();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      myTetromino.draw();
-      board.forEach((element) => drawSquare(element));
-      break;
-    case "ArrowRight":
-      event.preventDefault();
-      myTetromino.goRight();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      myTetromino.draw();
-      board.forEach((element) => drawSquare(element));
-      break;
-    case "ArrowUp":
-      event.preventDefault();
-      myTetromino.rotate();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      myTetromino.draw();
-      board.forEach((element) => drawSquare(element));
-      break;
-    case "ArrowDown":
-      event.preventDefault();
-      myTetromino.goDown();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      myTetromino.draw();
-      board.forEach((element) => drawSquare(element));
-      break;
-    default:
-      break;
-  }
+  //if (myTetromino.vy !== 0) {
+    switch (event.code) {
+      case "ArrowLeft":
+        event.preventDefault();
+        myTetromino.goLeft();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        myTetromino.draw();
+        board.forEach((element) => drawSquare(element));
+        break;
+      case "ArrowRight":
+        event.preventDefault();
+        myTetromino.goRight();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        myTetromino.draw();
+        board.forEach((element) => drawSquare(element));
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        myTetromino.rotate();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        myTetromino.draw();
+        board.forEach((element) => drawSquare(element));
+        break;
+      case "ArrowDown":
+        event.preventDefault();
+        myTetromino.goDown();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        myTetromino.draw();
+        board.forEach((element) => drawSquare(element));
+        break;
+      default:
+        break;
+    }
+ // }
 });
 
 /**
  * Executes the game loop which updates the tetromino's position and board state,
  * and then clears the canvas and redraws the board and tetromino.
  */
+
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  board.forEach((element) => drawSquare(element));
   myTetromino.draw();
   myTetromino.update();
-  board.forEach((element) => drawSquare(element));
+ 
+
+  const minY1 = Math.min(...myTetromino.shapePath.map((element) => element.y));
+
+  if (minY1 ===1) {
+    let color = getRandom6Colors()[Math.round(Math.random() * 6)];
+    nextTetromino = new Tetromino(canvas, color, vy, width, height, scale);
+    setupDisplay(nextTetromino, score);
+  }
+
   //
   //add the last tetromino to the board as simpler 4 squares(points)
   if (myTetromino.vy === 0) {
     myTetromino.shapePath.forEach((element) => board.push(element));
+
     //check whether the board is collapsable
-    const filteredArr = collapseRows(board);
+    const [filteredArr, newScore] = collapseRows(board, score);
+    if (newScore !== undefined) {
+      score = newScore;
+    }
+
     if (filteredArr !== undefined) {
       board = filteredArr;
     }
     //draw the board
-    board.forEach((element) => drawSquare(element));
 
+    newTetromino = nextTetromino;
     //check the game over condition and define the next game state
     const minY = Math.min(...myTetromino.shapePath.map((element) => element.y));
     if (minY !== 0) {
-      const color = getRandom6Colors()[Math.round(Math.random() * 6)];
-      let newTetromino = new Tetromino(canvas, color, vy, width, height, scale);
       myTetromino = newTetromino;
       gameLoop();
     }
   } else {
+    board.forEach((element) => drawSquare(element));
     setTimeout(gameLoop, 1000);
   }
 }
 
 /**
- * Collapse rows in an array if a row contains 20 elements.
+ * Collapse rows in an array if a row contains 12 elements.
  *
  * @param {Array} arr - The array to collapse rows from.
  * @return {Array} The modified array with collapsed rows.
  */
-function collapseRows(arr) {
+function collapseRows(arr, score) {
   const rowsToDelete = [];
+
   for (let i = 17; i >= 0; i--) {
     let counter = 0;
     arr.forEach((element) => element.y === i && counter++);
-    if (counter === 12) {
+    if (counter > 4) {
       rowsToDelete.push(i);
     }
   }
@@ -109,7 +171,8 @@ function collapseRows(arr) {
       return element;
     });
   }
-  return arr;
+  score += rowsToDelete.length * 20;
+  return [arr, score];
 }
 
 function drawSquare(point) {
