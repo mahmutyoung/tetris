@@ -156,7 +156,7 @@ function collapseRows(arr, score) {
   for (let i = 17; i >= 0; i--) {
     let counter = 0;
     arr.forEach((element) => element.y === i && counter++);
-    if (counter > 4) {
+    if (counter === 12) {
       rowsToDelete.push(i);
     }
   }
