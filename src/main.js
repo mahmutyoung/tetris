@@ -43,7 +43,7 @@ function setupDisplay(tetromino, score) {
   const newShape = tetromino.shapePath;
   ctxDisp.fillStyle = `${tetromino.color}`;
   newShape.forEach((element) => {
-    ctxDisp.fillRect(element.x * 36 - 100, element.y * 30 + 120, 34, 28);
+    ctxDisp.fillRect(element.x * 36 - 120, element.y * 30 + 120, 34, 28);
   });
 }
 
@@ -89,8 +89,9 @@ document.addEventListener("keydown", (event) => {
 
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  board.forEach((element) => drawSquare(element.point, element.color));
   myTetromino.draw();
+  board.forEach((element) => drawSquare(element.point, element.color));
+
   myTetromino.update();
 
   const minY1 = Math.min(...myTetromino.shapePath.map((element) => element.y));
@@ -113,7 +114,7 @@ function gameLoop() {
     if (newScore !== undefined) {
       score = newScore;
     }
-    Math.round(score / 100) * 100;
+
     if (filteredArr !== undefined) {
       board = filteredArr;
     }
@@ -144,7 +145,7 @@ function collapseRows(arr, score) {
   for (let i = 17; i >= 0; i--) {
     let counter = 0;
     arr.forEach((element) => element.point.y === i && counter++);
-    if (counter === 20) {
+    if (counter === 12) {
       rowsToDelete.push(i);
     }
   }
@@ -159,10 +160,11 @@ function collapseRows(arr, score) {
       return element;
     });
   }
-  if (rowsToDelete.length > 0)
+  if (rowsToDelete.length > 0) {
     score +=
       rowsToDelete.length * 20 +
       (rowsToDelete.length * rowsToDelete.length - 1) * 5;
+  }
   return [arr, score];
 }
 
