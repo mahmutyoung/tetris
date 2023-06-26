@@ -113,7 +113,7 @@ function gameLoop() {
     if (newScore !== undefined) {
       score = newScore;
     }
-
+    Math.round(score / 100) * 100;
     if (filteredArr !== undefined) {
       board = filteredArr;
     }
@@ -128,7 +128,7 @@ function gameLoop() {
     }
   } else {
     board.forEach((element) => drawSquare(element.point, element.color));
-    setTimeout(gameLoop, 1000);
+    setTimeout(gameLoop, 1000 - Math.round(score / 100) * 25);
   }
 }
 
@@ -144,7 +144,7 @@ function collapseRows(arr, score) {
   for (let i = 17; i >= 0; i--) {
     let counter = 0;
     arr.forEach((element) => element.point.y === i && counter++);
-    if (counter === 12) {
+    if (counter > 4) {
       rowsToDelete.push(i);
     }
   }
@@ -159,7 +159,10 @@ function collapseRows(arr, score) {
       return element;
     });
   }
-  score += rowsToDelete.length * 20;
+  if (rowsToDelete.length > 0)
+    score +=
+      rowsToDelete.length * 20 +
+      (rowsToDelete.length * rowsToDelete.length - 1) * 5;
   return [arr, score];
 }
 
